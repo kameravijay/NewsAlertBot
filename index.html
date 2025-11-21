@@ -36,7 +36,37 @@
       background: rgba(255,255,255,0.06);
     }
 
-    /* CTA toggle styles */
+    /* CTA toggle styles for the subscribe-panel buttons */
+    .cta-btn {
+      transition: all .15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 160px;
+      padding: .5rem 1rem;
+      text-align: center;
+      border-radius: .5rem;
+    }
+
+    .cta-btn.active {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 26px rgba(2,6,23,0.12);
+      outline: 0;
+    }
+
+    /* keyboard focus ring (accessible) */
+    .cta-btn:focus {
+      box-shadow: 0 0 0 4px rgba(59,130,246,0.12);
+    }
+
+    /* white/email button active visual */
+    .cta-btn.bg-white.active {
+      box-shadow:
+        0 10px 26px rgba(2,6,23,0.08),
+        0 0 0 3px rgba(59,130,246,0.14);
+    }
+
+    /* Channel-toggle (small hero toggle buttons) */
     .channel-toggle [role="button"]{
       cursor: pointer;
       user-select: none;
@@ -107,24 +137,24 @@
           <h2 class="text-2xl font-semibold mb-2">Get updates your way</h2>
           <p class="text-gray-600 mb-4">Choose how you want to receive news — Telegram (free), Email (daily digest), or WhatsApp (pro).</p>
 
-         <!-- START: CTA toggle group (replace the old 3-button block with this) -->
+         <!-- START: CTA toggle group -->
 <div id="cta-toggle-group" class="flex flex-col sm:flex-row gap-3" role="tablist" aria-label="Choose channel">
 
-  <a data-cta="telegram"
+  <a id="btn-telegram" data-cta="telegram"
      href="https://t.me/NewsAlertBotUpdates"
      class="cta-btn active bg-blue-600 text-white px-4 py-2 rounded-lg shadow transition"
      role="tab" aria-selected="true">
      Join on Telegram
   </a>
 
-  <a data-cta="email"
+  <a id="btn-email" data-cta="email"
      href="mailto:Kameravijay@gmail.com?subject=Subscribe%20to%20NewsAlertBot"
      class="cta-btn bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg transition"
      role="tab" aria-selected="false">
      Subscribe by Email
   </a>
 
-  <a data-cta="whatsapp"
+  <a id="btn-whatsapp" data-cta="whatsapp"
      href="https://wa.me/919999999999"
      class="cta-btn bg-green-600 text-white px-4 py-2 rounded-lg shadow transition"
      role="tab" aria-selected="false">
@@ -133,7 +163,6 @@
 
 </div>
 <!-- END: CTA toggle group -->
-
 
           <p class="text-sm text-gray-500 mt-3">Pro tip: Telegram is instant and free. Email delivers a daily digest. WhatsApp requires setup.</p>
         </div>
@@ -276,14 +305,15 @@
 
   </main>
 
-  <!-- Toggle / small JS to wire channel buttons with CTAs -->
+  <!-- Updated JS: wire hero toggle + subscribe-panel CTA buttons so they act as a single toggle group -->
   <script>
     (function(){
-      const toggleBtns = document.querySelectorAll('.channel-toggle [data-channel]');
+      // hero small toggle buttons (in the header)
+      const heroToggleBtns = document.querySelectorAll('.channel-toggle [data-channel]');
+      // subscribe-panel CTA buttons (the 3 main CTAs the user asked about)
+      const subscribeCtas = document.querySelectorAll('#cta-toggle-group [data-cta]');
+      // main hero CTA anchor (changes label/href/color depending on selection)
       const heroCta = document.getElementById('hero-cta');
-      const btnTelegram = document.getElementById('btn-telegram');
-      const btnEmail = document.getElementById('btn-email');
-      const btnWhatsapp = document.getElementById('btn-whatsapp');
 
       const channelToHref = {
         telegram: 'https://t.me/NewsAlertBotUpdates',
@@ -291,61 +321,91 @@
         whatsapp: 'https://wa.me/919999999999'
       };
 
-      function setActiveChannel(channel){
-        // Visual toggle
-        toggleBtns.forEach(b=>{
-          const is = b.dataset.channel === channel;
-          b.classList.toggle('active', is);
-          b.setAttribute('aria-pressed', is ? 'true' : 'false');
-          // color when active
-          if(is){
+      // helper: clear active state on both groups
+      function clearAllActive() {
+        heroToggleBtns.forEach(b => b.classList.remove('active'));
+        heroToggleBtns.forEach(b => b.setAttribute('aria-pressed','false'));
+        subscribeCtas.forEach(a => {
+          a.classList.remove('active');
+          a.setAttribute('aria-selected','false');
+        });
+      }
+
+      // set channel active (sync both hero-toggle and subscribe buttons + hero CTA)
+      function setActiveChannel(channel) {
+        clearAllActive();
+
+        // hero small toggles
+        heroToggleBtns.forEach(b => {
+          if (b.dataset.channel === channel) {
+            b.classList.add('active');
+            b.setAttribute('aria-pressed','true');
             b.classList.remove('bg-white/90','text-slate-700');
             b.classList.add('bg-white','text-blue-600');
           } else {
-            b.classList.add('bg-white/90','text-slate-700');
             b.classList.remove('bg-white','text-blue-600');
+            b.classList.add('bg-white/90','text-slate-700');
           }
         });
 
-        // Update hero CTA target & label
-        heroCta.href = channelToHref[channel] || channelToHref.telegram;
-        if(channel === 'telegram'){
+        // subscribe-panel CTAs
+        subscribeCtas.forEach(a => {
+          if (a.dataset.cta === channel) {
+            a.classList.add('active');
+            a.setAttribute('aria-selected','true');
+          }
+        });
+
+        // update hero CTA label / href / color
+        const href = channelToHref[channel] || channelToHref.telegram;
+        heroCta.href = href;
+
+        if (channel === 'telegram') {
           heroCta.textContent = 'Join on Telegram';
-          heroCta.classList.remove('bg-green-600','text-white');
+          heroCta.classList.remove('bg-green-600','text-white','text-slate-700');
           heroCta.classList.add('bg-white','text-blue-600');
-        } else if(channel === 'email'){
+        } else if (channel === 'email') {
           heroCta.textContent = 'Subscribe by Email';
-          heroCta.href = channelToHref.email;
-          heroCta.classList.remove('bg-white','text-blue-600','bg-green-600');
+          heroCta.classList.remove('bg-white','text-blue-600','bg-green-600','text-white');
           heroCta.classList.add('bg-white','text-slate-700');
-        } else if(channel === 'whatsapp'){
+        } else if (channel === 'whatsapp') {
           heroCta.textContent = 'Open WhatsApp';
           heroCta.classList.remove('bg-white','text-blue-600');
           heroCta.classList.add('bg-green-600','text-white');
         }
-
-        // also visually highlight the matching CTA in subscribe panel
-        [btnTelegram, btnEmail, btnWhatsapp].forEach(el => el.classList.remove('ring-2','ring-blue-300'));
-        if(channel === 'telegram') btnTelegram.classList.add('ring-2','ring-blue-300');
-        if(channel === 'email') btnEmail.classList.add('ring-2','ring-blue-300');
-        if(channel === 'whatsapp') btnWhatsapp.classList.add('ring-2','ring-blue-300');
       }
 
-      // initial
+      // initial selection
       setActiveChannel('telegram');
 
-      // wire buttons
-      toggleBtns.forEach(b=>{
-        b.addEventListener('click', ()=> setActiveChannel(b.dataset.channel));
-        b.addEventListener('keydown', (e)=>{
-          if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActiveChannel(b.dataset.channel); }
+      // wire clicks on hero small toggles (header)
+      heroToggleBtns.forEach(b => {
+        b.addEventListener('click', () => {
+          setActiveChannel(b.dataset.channel);
+        });
+        b.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setActiveChannel(b.dataset.channel);
+          }
         });
       });
 
-      // optional: sync subscribe-panel buttons to the toggle if user clicks them
-      btnTelegram.addEventListener('click', ()=> setTimeout(()=> setActiveChannel('telegram'), 30));
-      btnEmail.addEventListener('click', ()=> setTimeout(()=> setActiveChannel('email'), 30));
-      btnWhatsapp.addEventListener('click', ()=> setTimeout(()=> setActiveChannel('whatsapp'), 30));
+      // wire clicks on the subscribe-panel CTAs (the three big buttons)
+      subscribeCtas.forEach(a => {
+        a.addEventListener('click', (e) => {
+          // set active visually (navigation will occur normally for anchors)
+          setActiveChannel(a.dataset.cta);
+          // allow navigation to proceed (do not preventDefault)
+        });
+        a.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            a.click();
+          }
+        });
+      });
+
     })();
   </script>
 
