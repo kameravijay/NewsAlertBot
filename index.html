@@ -68,9 +68,69 @@
     100% { background-position: 0% 50%; }
   }
 </style>
+<!-- Floating shapes CSS -->
+<style>
+  .float-bg {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0; /* behind content */
+    overflow: hidden;
+  }
+
+  .float-shape {
+    position: absolute;
+    border-radius: 999px;
+    filter: blur(18px) saturate(120%);
+    opacity: 0.18;
+    transform-origin: center;
+    will-change: transform, opacity;
+    mix-blend-mode: screen;
+  }
+
+  /* subtle drifting */
+  @keyframes floatMoveA { 0%{transform:translateY(0) translateX(0) scale(1)} 50%{transform:translateY(-20px) translateX(10px) scale(1.03)} 100%{transform:translateY(0) translateX(0) scale(1)} }
+  @keyframes floatMoveB { 0%{transform:translateY(0) translateX(0) scale(1)} 50%{transform:translateY(25px) translateX(-15px) scale(0.98)} 100%{transform:translateY(0) translateX(0) scale(1)} }
+  @keyframes floatRotate { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+
+  .s1 { width:420px; height:420px; left:-60px; top:-40px; background:linear-gradient(135deg,#60a5fa,#7c3aed); animation: floatMoveA 12s ease-in-out infinite; }
+  .s2 { width:300px; height:300px; right:-40px; top:30%; background:linear-gradient(135deg,#34d399,#f472b6); animation: floatMoveB 18s ease-in-out infinite; opacity:0.14; }
+  .s3 { width:160px; height:160px; left:20%; bottom:-40px; background:linear-gradient(135deg,#60a5fa,#34d399); animation: floatMoveA 14s ease-in-out infinite; opacity:0.12; }
+  .s4 { width:220px; height:220px; right:10%; bottom:10%; background:linear-gradient(135deg,#a78bfa,#60a5fa); animation: floatMoveB 16s ease-in-out infinite; opacity:0.12; }
+
+  /* optional rotating logo/image */
+  .float-img {
+    width:140px;
+    height:140px;
+    right:6%;
+    top:6%;
+    border-radius:14px;
+    object-fit:cover;
+    opacity:0.9;
+    box-shadow:0 10px 40px rgba(2,6,23,0.12);
+    transform: translateZ(0);
+    animation: floatMoveA 20s ease-in-out infinite, floatRotate 60s linear infinite;
+    mix-blend-mode: normal;
+    opacity: 0.85;
+  }
+
+  /* ensure main content is above shapes */
+  main, header, section, footer { position: relative; z-index: 10; }
+</style>
 
 </head>
 <body class="bg-gray-50">
+  <!-- Floating animated shapes (behind content) -->
+<div class="float-bg" aria-hidden="true">
+  <div class="float-shape s1"></div>
+  <div class="float-shape s2"></div>
+  <div class="float-shape s3"></div>
+  <div class="float-shape s4"></div>
+
+  <!-- Use your uploaded mockup as a floating image shape -->
+  <img class="float-img" src="/mnt/data/A_2D_digital_graphic_design_landing_page_features_.png" alt="" />
+</div>
+
 <main class="px-6 sm:px-8 lg:px-12 max-w-7xl mx-auto space-y-12">
 
   <!-- Hero -->
