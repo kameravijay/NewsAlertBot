@@ -117,9 +117,23 @@
   /* ensure main content is above shapes */
   main, header, section, footer { position: relative; z-index: 10; }
 </style>
+<style>
+  /* Soft vignette glow around page */
+  .vignette::before {
+    content:"";
+    position:fixed;
+    inset:0;
+    background:radial-gradient(circle at center,
+      rgba(255,255,255,0) 60%,
+      rgba(0,0,0,0.18) 100%);
+    pointer-events:none;
+    z-index:5;
+  }
+</style>
 
 </head>
-<body class="bg-gray-50">
+<body class="vignette">
+
   <!-- Floating animated shapes (behind content) -->
 <div class="float-bg" aria-hidden="true">
   <div class="float-shape s1"></div>
