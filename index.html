@@ -11,6 +11,13 @@
     .cta{background:#007bff;color:#fff;padding:0.6rem 1rem;border-radius:6px;text-decoration:none}
     .card{border:1px solid #eee;padding:1rem;border-radius:8px;margin:1rem 0}
   </style>
+  <style>
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px);} to { opacity: 1; transform: translateY(0);} }
+  .fade-in { animation: fadeIn 700ms ease both; }
+  .cta-hover { transition: transform 180ms ease, box-shadow 180ms ease; }
+  .cta-hover:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 8px 20px rgba(2,6,23,0.12); }
+</style>
+
 </head>
 <body class="bg-gray-50">
 <main class="px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
