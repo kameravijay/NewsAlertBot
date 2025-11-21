@@ -42,6 +42,32 @@
     box-shadow: 0 8px 25px rgba(0,0,0,0.15);
   }
 </style>
+<style>
+  .glow {
+    position: relative;
+    overflow: hidden;
+  }
+  .glow::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 2px;
+    background: linear-gradient(135deg, #60a5fa, #a78bfa, #34d399, #f472b6);
+    background-size: 300% 300%;
+    animation: borderGlow 6s ease infinite;
+    -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+  }
+  @keyframes borderGlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+</style>
 
 </head>
 <body class="bg-gray-50">
