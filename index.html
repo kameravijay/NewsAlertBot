@@ -18,6 +18,20 @@
     @keyframes fadeIn { from { opacity: 0; transform: translateY(6px);} to { opacity: 1; transform: translateY(0);} }
     .fade-in { animation: fadeIn 700ms ease both; }
   </style>
+<style>
+  /* Animated gradient background */
+  body {
+    background: linear-gradient(-45deg, #3b82f6, #9333ea, #14b8a6, #f472b6);
+    background-size: 400% 400%;
+    animation: gradientMove 12s ease infinite;
+  }
+
+  @keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+</style>
 
 </head>
 <body class="bg-gray-50">
