@@ -107,23 +107,33 @@
           <h2 class="text-2xl font-semibold mb-2">Get updates your way</h2>
           <p class="text-gray-600 mb-4">Choose how you want to receive news — Telegram (free), Email (daily digest), or WhatsApp (pro).</p>
 
-          <div class="flex gap-3 items-center">
-            <!-- Buttons reflect same channels; JS will toggle which one is highlighted -->
-            <a id="btn-telegram" href="https://t.me/NewsAlertBotUpdates" target="_blank"
-               class="inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg shadow transition">
-              Join on Telegram
-            </a>
+         <!-- START: CTA toggle group (replace the old 3-button block with this) -->
+<div id="cta-toggle-group" class="flex flex-col sm:flex-row gap-3" role="tablist" aria-label="Choose channel">
 
-            <a id="btn-email" href="mailto:Kameravijay@gmail.com?subject=Subscribe%20to%20NewsAlertBot"
-               class="inline-flex items-center justify-center px-4 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition">
-              Subscribe by Email
-            </a>
+  <a data-cta="telegram"
+     href="https://t.me/NewsAlertBotUpdates"
+     class="cta-btn active bg-blue-600 text-white px-4 py-2 rounded-lg shadow transition"
+     role="tab" aria-selected="true">
+     Join on Telegram
+  </a>
 
-            <a id="btn-whatsapp" href="https://wa.me/919999999999" target="_blank"
-               class="inline-flex items-center justify-center px-4 py-2 bg-green-600 text-white rounded-lg shadow transition">
-              WhatsApp (Pro)
-            </a>
-          </div>
+  <a data-cta="email"
+     href="mailto:Kameravijay@gmail.com?subject=Subscribe%20to%20NewsAlertBot"
+     class="cta-btn bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg transition"
+     role="tab" aria-selected="false">
+     Subscribe by Email
+  </a>
+
+  <a data-cta="whatsapp"
+     href="https://wa.me/919999999999"
+     class="cta-btn bg-green-600 text-white px-4 py-2 rounded-lg shadow transition"
+     role="tab" aria-selected="false">
+     WhatsApp (Pro)
+  </a>
+
+</div>
+<!-- END: CTA toggle group -->
+
 
           <p class="text-sm text-gray-500 mt-3">Pro tip: Telegram is instant and free. Email delivers a daily digest. WhatsApp requires setup.</p>
         </div>
