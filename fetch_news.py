@@ -75,9 +75,17 @@ def read_env_secrets():
 
 
 def fetch_feed_entries(feed_url: str) -> List[Dict]:
-    """Return a list of entries from a feed (each entry has title, link, published)."""
+    """
+    Fetch the RSS/ATOM feed via requests (so we can use timeout and headers),
+    then parse the returned bytes with feedparser.parse().
+    """
+    headers = {
+        "User-Agent": "NewsAlertBot/1.0 (+https://github.com/kameravijay/NewsAlertBot)"
+    }
     try:
-        parsed = feedparser.parse(feed_url, request_timeout=REQUEST_TIMEOUT)
+        resp = requests.get(feed_url, timeout=REQUEST_TIMEOUT, headers=headers)
+        resp.raise_for_status()
+        parsed = feedparser.parse(resp.content)
         entries = []
         for e in parsed.entries:
             title = e.get("title", "").strip()
@@ -85,9 +93,11 @@ def fetch_feed_entries(feed_url: str) -> List[Dict]:
             published = e.get("published", e.get("updated", ""))
             entries.append({"title": title, "link": link, "published": published})
         return entries
+    except requests.exceptions.RequestException as rex:
+        logger.warning("HTTP error fetching feed %s : %s", feed_url, rex)
     except Exception as ex:
-        logger.warning("Failed to fetch feed %s : %s", feed_url, ex)
-        return []
+        logger.warning("Failed to parse feed %s : %s", feed_url, ex)
+    return []
 
 
 def collect_top_headlines(feeds: List[str], max_items: int = MAX_HEADLINES) -> List[Dict]:
