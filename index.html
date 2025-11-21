@@ -1,326 +1,310 @@
 <!doctype html>
 <html>
 <head>
-  <meta charset="utf-8" />
-  <title>NewsAlertBot — Global hourly news</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="utf-8" />
+    <title>NewsAlertBot — Global hourly news</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Animated gradient background -->
-  <style>
-    body {
-      background: linear-gradient(-45deg, #3b82f6, #9333ea, #14b8a6, #f472b6);
-      background-size: 400% 400%;
-      animation: gradientMove 12s ease infinite;
-    }
-    @keyframes gradientMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-  </style>
+    <style>
+        body {
+            background: linear-gradient(-45deg, #3b82f6, #9333ea, #14b8a6, #f472b6);
+            background-size: 400% 400%;
+            animation: gradientMove 12s ease infinite;
+        }
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+    </style>
 
-  <!-- Glassmorphism -->
-  <style>
-    .glass {
-      background: rgba(255,255,255,0.14);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.18);
-      border-radius: 16px;
-      box-shadow: 0 8px 30px rgba(2,6,23,0.10);
-    }
-  </style>
+    <style>
+        .glass {
+            background: rgba(255,255,255,0.14);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.18);
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(2,6,23,0.10);
+        }
+    </style>
 
-  <!-- Glow border -->
-  <style>
-    .glow { position: relative; overflow: hidden; border-radius: inherit; }
-    .glow::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      padding: 2px;
-      background: linear-gradient(135deg,#60a5fa,#a78bfa,#34d399,#f472b6);
-      background-size: 300% 300%;
-      animation: borderGlow 6s ease infinite;
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-              mask-composite: exclude;
-      pointer-events: none;
-    }
-    @keyframes borderGlow {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-  </style>
+    <style>
+        .glow { position: relative; overflow: hidden; border-radius: inherit; }
+        .glow::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 2px;
+            background: linear-gradient(135deg,#60a5fa,#a78bfa,#34d399,#f472b6);
+            background-size: 300% 300%;
+            animation: borderGlow 6s ease infinite;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+        @keyframes borderGlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+    </style>
 
-  <!-- Floating shapes -->
-  <style>
-    .float-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
-    .float-shape { position: absolute; border-radius: 999px; filter: blur(18px) saturate(120%); opacity: 0.12; transform-origin: center; will-change: transform, opacity; mix-blend-mode: screen; }
-    @keyframes floatMoveA { 0%{transform:translateY(0) translateX(0) scale(1)} 50%{transform:translateY(-20px) translateX(10px) scale(1.03)} 100%{transform:translateY(0) translateX(0) scale(1)} }
-    @keyframes floatMoveB { 0%{transform:translateY(0) translateX(0) scale(1)} 50%{transform:translateY(25px) translateX(-15px) scale(0.98)} 100%{transform:translateY(0) translateX(0) scale(1)} }
-    @keyframes floatRotate { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+    <style>
+        .float-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+        .float-shape { position: absolute; border-radius: 999px; filter: blur(18px) saturate(120%); opacity: 0.12; transform-origin: center; will-change: transform, opacity; mix-blend-mode: screen; }
+        @keyframes floatMoveA { 0%{transform:translateY(0) translateX(0) scale(1)} 50%{transform:translateY(-20px) translateX(10px) scale(1.03)} 100%{transform:translateY(0) translateX(0) scale(1)} }
+        @keyframes floatMoveB { 0%{transform:translateY(0) translateX(0) scale(1)} 50%{transform:translateY(25px) translateX(-15px) scale(0.98)} 100%{transform:translateY(0) translateX(0) scale(1)} }
+        @keyframes floatRotate { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
 
-    .s1 { width:420px; height:420px; left:-60px; top:-40px; background:linear-gradient(135deg,#60a5fa,#7c3aed); animation: floatMoveA 12s ease-in-out infinite; }
-    .s2 { width:300px; height:300px; right:-40px; top:30%; background:linear-gradient(135deg,#34d399,#f472b6); animation: floatMoveB 18s ease-in-out infinite; opacity:0.12; }
-    .s3 { width:160px; height:160px; left:20%; bottom:-40px; background:linear-gradient(135deg,#60a5fa,#34d399); animation: floatMoveA 14s ease-in-out infinite; opacity:0.12; }
-    .s4 { width:220px; height:220px; right:10%; bottom:10%; background:linear-gradient(135deg,#a78bfa,#60a5fa); animation: floatMoveB 16s ease-in-out infinite; opacity:0.12; }
+        .s1 { width:420px; height:420px; left:-60px; top:-40px; background:linear-gradient(135deg,#60a5fa,#7c3aed); animation: floatMoveA 12s ease-in-out infinite; }
+        .s2 { width:300px; height:300px; right:-40px; top:30%; background:linear-gradient(135deg,#34d399,#f472b6); animation: floatMoveB 18s ease-in-out infinite; opacity:0.12; }
+        .s3 { width:160px; height:160px; left:20%; bottom:-40px; background:linear-gradient(135deg,#60a5fa,#34d399); animation: floatMoveA 14s ease-in-out infinite; opacity:0.12; }
+        .s4 { width:220px; height:220px; right:10%; bottom:10%; background:linear-gradient(135deg,#a78bfa,#60a5fa); animation: floatMoveB 16s ease-in-out infinite; opacity:0.12; }
 
-    .float-img {
-      width:120px;
-      height:120px;
-      right:6%;
-      top:6%;
-      border-radius:12px;
-      object-fit:cover;
-      opacity:0.85;
-      box-shadow:0 10px 40px rgba(2,6,23,0.12);
-      transform: translateZ(0);
-      animation: floatMoveA 20s ease-in-out infinite, floatRotate 60s linear infinite;
-      mix-blend-mode: normal;
-    }
+        .float-img {
+            width:120px;
+            height:120px;
+            right:6%;
+            top:6%;
+            border-radius:12px;
+            object-fit:cover;
+            opacity:0.85;
+            box-shadow:0 10px 40px rgba(2,6,23,0.12);
+            transform: translateZ(0);
+            animation: floatMoveA 20s ease-in-out infinite, floatRotate 60s linear infinite;
+            mix-blend-mode: normal;
+        }
 
-    /* ensure main content is above shapes */
-    main, header, section, footer { position: relative; z-index: 10; }
-  </style>
+        /* ensure main content is above shapes */
+        main, header, section, footer { position: relative; z-index: 10; }
+    </style>
 
-  <!-- Soft pop animation -->
-  <style>
-    .soft-pop { animation: softPop 0.8s ease both; }
-    @keyframes softPop { 0% { transform: scale(0.98); opacity: 0; filter: blur(6px); } 100% { transform: scale(1); opacity: 1; filter: blur(0); } }
-  </style>
+    <style>
+        .soft-pop { animation: softPop 0.8s ease both; }
+        @keyframes softPop { 0% { transform: scale(0.98); opacity: 0; filter: blur(6px); } 100% { transform: scale(1); opacity: 1; filter: blur(0); } }
+    </style>
 
-  <!-- Fade in / CTA hover -->
-  <style>
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-    .fade-in { animation: fadeIn 700ms ease both; }
-    .cta-hover { transition: transform 180ms ease, box-shadow 180ms ease; }
-    .cta-hover:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 8px 20px rgba(2,6,23,0.12); }
-  </style>
+    <style>
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 700ms ease both; }
+        .cta-hover { transition: transform 180ms ease, box-shadow 180ms ease; }
+        .cta-hover:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 8px 20px rgba(2,6,23,0.12); }
+    </style>
 
-  <!-- Vignette -->
-  <style>
-    .vignette::before {
-      content:"";
-      position:fixed;
-      inset:0;
-      background:radial-gradient(circle at center, rgba(255,255,255,0) 60%, rgba(0,0,0,0.12) 100%);
-      pointer-events:none;
-      z-index:5;
-    }
-  </style>
+    <style>
+        .vignette::before {
+            content:"";
+            position:fixed;
+            inset:0;
+            background:radial-gradient(circle at center, rgba(255,255,255,0) 60%, rgba(0,0,0,0.12) 100%);
+            pointer-events:none;
+            z-index:5;
+        }
+    </style>
 
 </head>
 <body class="vignette">
 
-<!-- Floating animated shapes (behind content) -->
 <div class="float-bg" aria-hidden="true">
-  <div class="float-shape s1"></div>
-  <div class="float-shape s2"></div>
-  <div class="float-shape s3"></div>
-  <div class="float-shape s4"></div>
+    <div class="float-shape s1"></div>
+    <div class="float-shape s2"></div>
+    <div class="float-shape s3"></div>
+    <div class="float-shape s4"></div>
 
-  <!-- floating image (uses your uploaded file) -->
-  <img class="float-img" src="/mnt/data/A_2D_digital_graphic_design_landing_page_features_.png" alt="" />
+    <img class="float-img" src="image_f0677e.png" alt="" />
 </div>
 
 <main class="px-6 sm:px-8 lg:px-12 max-w-7xl mx-auto space-y-12">
 
-  <!-- Hero (compact) -->
-  <header class="flex flex-col md:flex-row items-center gap-4 mb-8 p-3 lg:p-4 rounded-xl shadow bg-gradient-to-r from-blue-600 to-blue-400 text-white fade-in min-h-[12vh]">
-    <img src="/mnt/data/A_2D_digital_graphic_design_landing_page_features_.png"
-         alt="NewsAlertBot logo"
-         class="w-32 md:w-40 lg:w-48 rounded-xl shadow" />
+    <header class="flex flex-col md:flex-row items-center gap-4 mb-8 p-3 lg:p-4 rounded-xl shadow bg-gradient-to-r from-blue-600 to-blue-400 text-white fade-in min-h-[12vh]">
+        <img src="image_f0677e.png"
+             alt="NewsAlertBot logo"
+             class="w-32 md:w-40 lg:w-48 rounded-xl shadow" />
 
-    <div class="flex-1">
-      <h1 class="text-3xl md:text-4xl font-bold mb-2">NewsAlertBot</h1>
-      <p class="text-blue-100 mb-3">Worldwide news, every hour — delivered to Telegram, Email or WhatsApp.</p>
+        <div class="flex-1">
+            <h1 class="text-3xl md:text-4xl font-bold mb-2">NewsAlertBot</h1>
+            <p class="text-blue-100 mb-3">Worldwide news, every hour — delivered to Telegram, Email or WhatsApp.</p>
 
-      <a href="https://t.me/NewsAlertBotUpdates"
-         target="_blank"
-         class="bg-white text-blue-600 px-4 py-2 rounded-lg shadow cta-hover inline-flex items-center gap-2">
-        <span>Join on Telegram</span>
-      </a>
-    </div>
-  </header>
+            <a href="https://t.me/NewsAlertBotUpdates"
+               target="_blank"
+               class="bg-white text-blue-600 px-4 py-2 rounded-lg shadow cta-hover inline-flex items-center gap-2">
+                <span>Join on Telegram</span>
+            </a>
+        </div>
+    </header>
 
-  <!-- Subscribe -->
-  <section class="glass glow p-6 soft-pop mt-6">
-    <div class="flex flex-col md:flex-row items-center gap-6">
-      <img src="/mnt/data/A_2D_digital_graphic_design_landing_page_features_.png" alt="NewsAlertBot visual" class="w-28 rounded-lg hidden md:block">
-      <div class="flex-1">
-        <h2 class="text-2xl font-semibold mb-2">Get updates your way</h2>
-        <p class="text-gray-200 mb-4">Choose how you want to receive news — Telegram (free), Email (daily digest), or WhatsApp (pro).</p>
+    <section class="glass glow p-6 soft-pop mt-6">
+        <div class="flex flex-col md:flex-row items-center gap-6">
+            <img src="image_f0677e.png" alt="NewsAlertBot visual" class="w-28 rounded-lg hidden md:block">
+            <div class="flex-1">
+                <h2 class="text-2xl font-semibold mb-2">Get updates your way</h2>
+                <p class="text-gray-200 mb-4">Choose how you want to receive news — Telegram (free), Email (daily digest), or WhatsApp (pro).</p>
 
-        <div class="flex flex-col sm:flex-row gap-3">
-          <a href="https://t.me/NewsAlertBotUpdates" target="_blank" class="inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition">
-            Join on Telegram
-          </a>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <a href="https://t.me/NewsAlertBotUpdates" target="_blank" class="inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition">
+                        Join on Telegram
+                    </a>
 
-          <a href="mailto:Kameravijay@gmail.com?subject=Subscribe%20to%20NewsAlertBot" class="inline-flex items-center justify-center px-4 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 transition text-gray-800">
-            Subscribe by Email
-          </a>
+                    <a href="mailto:Kameravijay@gmail.com?subject=Subscribe%20to%20NewsAlertBot" class="inline-flex items-center justify-center px-4 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 transition text-gray-800">
+                        Subscribe by Email
+                    </a>
 
-          <a href="https://wa.me/919999999999" target="_blank" class="inline-flex items-center justify-center px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition">
-            WhatsApp (Pro)
-          </a>
+                    <a href="https://wa.me/919999999999" target="_blank" class="inline-flex items-center justify-center px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition">
+                        WhatsApp (Pro)
+                    </a>
+                </div>
+
+                <p class="text-sm text-gray-200 mt-3">Pro tip: Telegram is instant and free. Email delivers a daily digest. WhatsApp requires setup.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="grid md:grid-cols-3 gap-6 mt-10">
+        <div class="glass glow p-6 soft-pop">
+            <h3 class="text-xl font-semibold mb-2">Starter</h3>
+            <p class="text-gray-200 mb-4">₹0 / month</p>
+            <ul class="text-sm text-gray-100 mb-4 space-y-2">
+                <li>✔ Hourly world news</li>
+                <li>✔ Instant Telegram updates</li>
+                <li>✔ Join immediately</li>
+            </ul>
+            <a href="https://t.me/NewsAlertBotUpdates" target="_blank" class="block text-center bg-blue-600 text-white py-2 rounded-lg">
+                Get Started
+            </a>
         </div>
 
-        <p class="text-sm text-gray-200 mt-3">Pro tip: Telegram is instant and free. Email delivers a daily digest. WhatsApp requires setup.</p>
-      </div>
-    </div>
-  </section>
+        <div class="glass glow p-6 soft-pop">
+            <h3 class="text-xl font-semibold mb-2">Pro</h3>
+            <p class="text-gray-200 mb-4">₹99 / month</p>
+            <ul class="text-sm text-gray-100 mb-4 space-y-2">
+                <li>✔ Email daily digest</li>
+                <li>✔ Add custom keywords</li>
+                <li>✔ Priority updates</li>
+            </ul>
+            <a href="#" class="block text-center bg-blue-600 text-white py-2 rounded-lg">Coming Soon</a>
+        </div>
 
-  <!-- Plans -->
-  <section class="grid md:grid-cols-3 gap-6 mt-10">
-    <div class="glass glow p-6 soft-pop">
-      <h3 class="text-xl font-semibold mb-2">Starter</h3>
-      <p class="text-gray-200 mb-4">₹0 / month</p>
-      <ul class="text-sm text-gray-100 mb-4 space-y-2">
-        <li>✔ Hourly world news</li>
-        <li>✔ Instant Telegram updates</li>
-        <li>✔ Join immediately</li>
-      </ul>
-      <a href="https://t.me/NewsAlertBotUpdates" target="_blank" class="block text-center bg-blue-600 text-white py-2 rounded-lg">
-        Get Started
-      </a>
-    </div>
+        <div class="glass glow p-6 soft-pop">
+            <h3 class="text-xl font-semibold mb-2">Business</h3>
+            <p class="text-gray-200 mb-4">₹499 / month</p>
+            <ul class="text-sm text-gray-100 mb-4 space-y-2">
+                <li>✔ WhatsApp Pro alerts</li>
+                <li>✔ Slack integration</li>
+                <li>✔ API access</li>
+            </ul>
+            <a href="mailto:alerts@yourdomain.com" class="block text-center bg-gray-800 text-white py-2 rounded-lg">Contact Us</a>
+        </div>
+    </section>
 
-    <div class="glass glow p-6 soft-pop">
-      <h3 class="text-xl font-semibold mb-2">Pro</h3>
-      <p class="text-gray-200 mb-4">₹99 / month</p>
-      <ul class="text-sm text-gray-100 mb-4 space-y-2">
-        <li>✔ Email daily digest</li>
-        <li>✔ Add custom keywords</li>
-        <li>✔ Priority updates</li>
-      </ul>
-      <a href="#" class="block text-center bg-blue-600 text-white py-2 rounded-lg">Coming Soon</a>
-    </div>
+    <section class="glass glow p-6 soft-pop mt-12">
+        <h2 class="text-2xl font-bold mb-4">How it works</h2>
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="flex flex-col items-start gap-3">
+                <div class="w-12 h-12 flex items-center justify-center bg-white/10 text-white rounded-full font-bold">1</div>
+                <h4 class="font-semibold text-white">Choose a plan</h4>
+                <p class="text-gray-200 text-sm">Select Free, Pro or Business depending on your needs.</p>
+            </div>
 
-    <div class="glass glow p-6 soft-pop">
-      <h3 class="text-xl font-semibold mb-2">Business</h3>
-      <p class="text-gray-200 mb-4">₹499 / month</p>
-      <ul class="text-sm text-gray-100 mb-4 space-y-2">
-        <li>✔ WhatsApp Pro alerts</li>
-        <li>✔ Slack integration</li>
-        <li>✔ API access</li>
-      </ul>
-      <a href="mailto:alerts@yourdomain.com" class="block text-center bg-gray-800 text-white py-2 rounded-lg">Contact Us</a>
-    </div>
-  </section>
+            <div class="flex flex-col items-start gap-3">
+                <div class="w-12 h-12 flex items-center justify-center bg-white/10 text-white rounded-full font-bold">2</div>
+                <h4 class="font-semibold text-white">Pick channels & topics</h4>
+                <p class="text-gray-200 text-sm">Telegram, Email or WhatsApp — and the topics you care about.</p>
+            </div>
 
-  <!-- How it works -->
-  <section class="glass glow p-6 soft-pop mt-12">
-    <h2 class="text-2xl font-bold mb-4">How it works</h2>
-    <div class="grid md:grid-cols-3 gap-6">
-      <div class="flex flex-col items-start gap-3">
-        <div class="w-12 h-12 flex items-center justify-center bg-white/10 text-white rounded-full font-bold">1</div>
-        <h4 class="font-semibold text-white">Choose a plan</h4>
-        <p class="text-gray-200 text-sm">Select Free, Pro or Business depending on your needs.</p>
-      </div>
-
-      <div class="flex flex-col items-start gap-3">
-        <div class="w-12 h-12 flex items-center justify-center bg-white/10 text-white rounded-full font-bold">2</div>
-        <h4 class="font-semibold text-white">Pick channels & topics</h4>
-        <p class="text-gray-200 text-sm">Telegram, Email or WhatsApp — and the topics you care about.</p>
-      </div>
-
-      <div class="flex flex-col items-start gap-3">
-        <div class="w-12 h-12 flex items-center justify-center bg-white/10 text-white rounded-full font-bold">3</div>
-        <h4 class="font-semibold text-white">Receive alerts</h4>
-        <p class="text-gray-200 text-sm">Get hourly updates and a daily digest — instantly where you want them.</p>
-      </div>
-    </div>
-  </section>
+            <div class="flex flex-col items-start gap-3">
+                <div class="w-12 h-12 flex items-center justify-center bg-white/10 text-white rounded-full font-bold">3</div>
+                <h4 class="font-semibold text-white">Receive alerts</h4>
+                <p class="text-gray-200 text-sm">Get hourly updates and a daily digest — instantly where you want them.</p>
+            </div>
+        </div>
+    </section>
 
 </main>
 
-<!-- Trusted by Users Section -->
 <section class="glass glow p-6 soft-pop mt-10 max-w-7xl mx-auto">
-  <h2 class="text-2xl font-bold mb-4 text-center text-white">Trusted by users from all over India</h2>
+    <h2 class="text-2xl font-bold mb-4 text-center text-white">Trusted by users from all over India</h2>
 
-  <div class="grid md:grid-cols-3 gap-6 text-center">
-    <div class="p-4 border rounded-xl shadow-sm">
-      <h3 class="text-xl font-semibold text-white">10,000+</h3>
-      <p class="text-gray-200">News alerts delivered</p>
-    </div>
-
-    <div class="p-4 border rounded-xl shadow-sm">
-      <h3 class="text-xl font-semibold text-white">500+ Subscribers</h3>
-      <p class="text-gray-200">Telegram users</p>
-    </div>
-
-    <div class="p-4 border rounded-xl shadow-sm">
-      <h3 class="text-xl font-semibold text-white">95% Satisfaction</h3>
-      <p class="text-gray-200">User feedback</p>
-    </div>
-  </div>
-</section>
-
-<!-- FAQ Section -->
-<section class="glass p-8 soft-pop mt-10 max-w-7xl mx-auto">
-  <h2 class="text-2xl font-bold mb-6 text-center text-white">Frequently Asked Questions</h2>
-  <div class="space-y-6 text-gray-200">
-    <div>
-      <h3 class="font-semibold text-lg text-white">What does NewsAlertBot do?</h3>
-      <p>It sends hourly global news updates to Telegram, with optional daily email digests and WhatsApp alerts.</p>
-    </div>
-
-    <div>
-      <h3 class="font-semibold text-lg text-white">Is the Telegram version free?</h3>
-      <p>Yes! You can receive hourly world news at zero cost via our Telegram channel.</p>
-    </div>
-
-    <div>
-      <h3 class="font-semibold text-lg text-white">How does the PRO plan work?</h3>
-      <p>The PRO plan gives you email digests, custom keyword alerts, and priority delivery.</p>
-    </div>
-
-    <div>
-      <h3 class="font-semibold text-lg text-white">Can I request custom categories?</h3>
-      <p>Yes! For PRO and Business plans, we can add custom topics like stocks, crypto, or region-specific news.</p>
-    </div>
-
-    <div>
-      <h3 class="font-semibold text-lg text-white">Do I need to install anything?</h3>
-      <p>No installation required — everything works through Telegram, Email, or WhatsApp.</p>
-    </div>
-  </div>
-</section>
-
-<!-- Contact / Support -->
-<section class="glass glow p-6 soft-pop mt-8 max-w-7xl mx-auto">
-  <h2 class="text-2xl font-bold mb-4 text-white">Contact & Support</h2>
-  <div class="grid md:grid-cols-2 gap-6 items-center">
-    <div>
-      <p class="text-gray-200 mb-3">Have questions or need custom integration? Reach out — we reply fast.</p>
-      <p class="text-sm text-gray-200 mb-4">Email: <a href="mailto:alerts@yourdomain.com" class="text-white underline">alerts@yourdomain.com</a></p>
-      <p class="text-sm text-gray-200">Telegram: <a href="https://t.me/NewsAlertOfficial_Bot" class="text-white underline" target="_blank">@NewsAlertOfficial_Bot</a></p>
-    </div>
-
-    <div>
-      <form action="mailto:alerts@yourdomain.com" method="post" enctype="text/plain" class="space-y-3">
-        <input type="text" name="name" placeholder="Your name" class="w-full p-3 border rounded-lg" required>
-        <input type="email" name="email" placeholder="Your email" class="w-full p-3 border rounded-lg" required>
-        <textarea name="message" rows="4" placeholder="How can we help?" class="w-full p-3 border rounded-lg" required></textarea>
-        <div class="flex gap-3">
-          <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg">Send Message</button>
-          <a href="https://t.me/NewsAlertBotUpdates" target="_blank" class="px-4 py-2 border rounded-lg text-white">Join Telegram</a>
+    <div class="grid md:grid-cols-3 gap-6 text-center">
+        <div class="p-4 border rounded-xl shadow-sm">
+            <h3 class="text-xl font-semibold text-white">10,000+</h3>
+            <p class="text-gray-200">News alerts delivered</p>
         </div>
-      </form>
+
+        <div class="p-4 border rounded-xl shadow-sm">
+            <h3 class="text-xl font-semibold text-white">500+ Subscribers</h3>
+            <p class="text-gray-200">Telegram users</p>
+        </div>
+
+        <div class="p-4 border rounded-xl shadow-sm">
+            <h3 class="text-xl font-semibold text-white">95% Satisfaction</h3>
+            <p class="text-gray-200">User feedback</p>
+        </div>
     </div>
-  </div>
+</section>
+
+<section class="glass p-8 soft-pop mt-10 max-w-7xl mx-auto">
+    <h2 class="text-2xl font-bold mb-6 text-center text-white">Frequently Asked Questions</h2>
+    <div class="space-y-6 text-gray-200">
+        <div>
+            <h3 class="font-semibold text-lg text-white">What does NewsAlertBot do?</h3>
+            <p>It sends hourly global news updates to Telegram, with optional daily email digests and WhatsApp alerts.</p>
+        </div>
+
+        <div>
+            <h3 class="font-semibold text-lg text-white">Is the Telegram version free?</h3>
+            <p>Yes! You can receive hourly world news at zero cost via our Telegram channel.</p>
+        </div>
+
+        <div>
+            <h3 class="font-semibold text-lg text-white">How does the PRO plan work?</h3>
+            <p>The PRO plan gives you email digests, custom keyword alerts, and priority delivery.</p>
+        </div>
+
+        <div>
+            <h3 class="font-semibold text-lg text-white">Can I request custom categories?</h3>
+            <p>Yes! For PRO and Business plans, we can add custom topics like stocks, crypto, or region-specific news.</p>
+        </div>
+
+        <div>
+            <h3 class="font-semibold text-lg text-white">Do I need to install anything?</h3>
+            <p>No installation required — everything works through Telegram, Email, or WhatsApp.</p>
+        </div>
+    </div>
+</section>
+
+<section class="glass glow p-6 soft-pop mt-8 max-w-7xl mx-auto">
+    <h2 class="text-2xl font-bold mb-4 text-white">Contact & Support</h2>
+    <div class="grid md:grid-cols-2 gap-6 items-center">
+        <div>
+            <p class="text-gray-200 mb-3">Have questions or need custom integration? Reach out — we reply fast.</p>
+            <p class="text-sm text-gray-200 mb-4">Email: <a href="mailto:alerts@yourdomain.com" class="text-white underline">alerts@yourdomain.com</a></p>
+            <p class="text-sm text-gray-200">Telegram: <a href="https://t.me/NewsAlertOfficial_Bot" class="text-white underline" target="_blank">@NewsAlertOfficial_Bot</a></p>
+        </div>
+
+        <div>
+            <form action="mailto:alerts@yourdomain.com" method="post" enctype="text/plain" class="space-y-3">
+                <input type="text" name="name" placeholder="Your name" class="w-full p-3 border rounded-lg" required>
+                <input type="email" name="email" placeholder="Your email" class="w-full p-3 border rounded-lg" required>
+                <textarea name="message" rows="4" placeholder="How can we help?" class="w-full p-3 border rounded-lg" required></textarea>
+                <div class="flex gap-3">
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg">Send Message</button>
+                    <a href="https://t.me/NewsAlertBotUpdates" target="_blank" class="px-4 py-2 border rounded-lg text-white">Join Telegram</a>
+                </div>
+            </form>
+        </div>
+    </div>
 </section>
 
 <footer class="mt-16 text-center text-gray-200 text-sm py-6 border-t border-white/10">
-  <p>© 2025 NewsAlertBot. All rights reserved.</p>
-  <p class="mt-1">
-    <a href="https://t.me/NewsAlertBotUpdates" target="_blank" class="text-white underline">Join our Telegram Channel</a>
-  </p>
-  <p class="mt-1">Built with ❤️ using AI | Powered by GitHub Actions</p>
+    <p>© 2025 NewsAlertBot. All rights reserved.</p>
+    <p class="mt-1">
+        <a href="https://t.me/NewsAlertBotUpdates" target="_blank" class="text-white underline">Join our Telegram Channel</a>
+    </p>
+    <p class="mt-1">Built with ❤️ using AI | Powered by GitHub Actions</p>
 </footer>
 
 </body>
