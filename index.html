@@ -1,6 +1,17 @@
 <!doctype html>
 <html>
 <head>
+  <style>
+  .soft-pop {
+    animation: softPop 0.8s ease both;
+  }
+
+  @keyframes softPop {
+    0% { transform: scale(0.97); opacity: 0; filter: blur(6px); }
+    100% { transform: scale(1); opacity: 1; filter: blur(0); }
+  }
+</style>
+
   <meta charset="utf-8">
   <title>NewsAlertBot — Global hourly news</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
