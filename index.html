@@ -100,34 +100,68 @@
 
   <main class="container-max space-y-8">
 
-    <!-- Hero (clean, rounded, moderate height) -->
-    <header class="hero bg-gradient-to-r from-blue-600 to-blue-400 text-white shadow-lg flex flex-col md:flex-row items-center gap-6">
-      <!-- Use uploaded image path (developer-supplied). -->
-      <img src="/mnt/data/3c2ed6bf-56f3-43ed-890e-6dee0ee521dd.png"
-           alt="NewsAlertBot logo"
-           class="hero-logo flex-shrink-0" />
+   <script>
+(function(){
+  const subscribeCtas = document.querySelectorAll('#cta-toggle-group [data-cta]');
+  const heroCta = document.getElementById('hero-cta');
 
-      <div class="flex-1">
-        <h1 class="text-3xl md:text-4xl font-extrabold leading-tight">NewsAlertBot</h1>
-        <p class="text-blue-100 mt-2 max-w-2xl">
-          Worldwide news, every hour — delivered to Telegram, Email or WhatsApp.
-        </p>
+  const channelToHref = {
+    telegram: 'https://t.me/NewsAlertBotUpdates',
+    email: 'mailto:Kameravijay@gmail.com?subject=Subscribe%20to%20NewsAlertBot',
+    whatsapp: 'https://wa.me/919999999999'
+  };
 
-        <div class="mt-5 flex items-center gap-4">
-          <!-- Primary CTA group (these reflect the currently selected channel) -->
-          <a id="hero-cta" href="https://t.me/NewsAlertBotUpdates" target="_blank"
-             class="primary-cta bg-white text-blue-600 inline-flex items-center gap-2 shadow">
-            Join on Telegram
-          </a>
+  function clearActive() {
+    subscribeCtas.forEach(a => {
+      a.classList.remove('active');
+      a.setAttribute('aria-selected','false');
+    });
+  }
 
-          <div class="channel-toggle ml-2 inline-flex items-center gap-2" role="tablist" aria-label="Choose channel">
-            <button type="button" class="btn active bg-white text-blue-600" data-channel="telegram" aria-pressed="true" role="button">Telegram</button>
-            <button type="button" class="btn bg-white/90 text-slate-700" data-channel="email" aria-pressed="false" role="button">Email</button>
-            <button type="button" class="btn bg-white/90 text-slate-700" data-channel="whatsapp" aria-pressed="false" role="button">WhatsApp</button>
-          </div>
-        </div>
-      </div>
-    </header>
+  function setActiveChannel(channel) {
+    clearActive();
+
+    subscribeCtas.forEach(a => {
+      if (a.dataset.cta === channel) {
+        a.classList.add('active');
+        a.setAttribute('aria-selected','true');
+      }
+    });
+
+    heroCta.href = channelToHref[channel];
+
+    if (channel === 'telegram') {
+      heroCta.textContent = 'Join on Telegram';
+      heroCta.classList.remove('bg-green-600','text-white','text-slate-700');
+      heroCta.classList.add('bg-white','text-blue-600');
+    }
+
+    if (channel === 'email') {
+      heroCta.textContent = 'Subscribe by Email';
+      heroCta.classList.remove('bg-white','text-blue-600','bg-green-600','text-white');
+      heroCta.classList.add('bg-white','text-slate-700');
+    }
+
+    if (channel === 'whatsapp') {
+      heroCta.textContent = 'Open WhatsApp';
+      heroCta.classList.remove('bg-white','text-blue-600');
+      heroCta.classList.add('bg-green-600','text-white');
+    }
+  }
+
+  // initial load
+  setActiveChannel('telegram');
+
+  // clicks
+  subscribeCtas.forEach(a => {
+    a.addEventListener('click', () => {
+      setActiveChannel(a.dataset.cta);
+    });
+  });
+
+})();
+</script>
+
 
     <!-- Subscribe / CTA panel -->
     <section class="max-w-4xl mx-auto bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow">
